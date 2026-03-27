@@ -1,23 +1,33 @@
 'use client'
 
 import React from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Plus, MessageSquare, Settings2, Search, Settings, User } from 'lucide-react'
 
 export function Sidebar() {
+  const pathname = usePathname()
+
+  const navItems = [
+    { name: 'Chats', href: '/', icon: MessageSquare },
+    { name: 'Customize', href: '/customize', icon: Settings2 },
+    { name: 'Search', href: '/search', icon: Search },
+  ]
+
   return (
     <div className="flex flex-col h-screen w-[260px] bg-white/70 backdrop-blur-xl border-r border-white/20 text-gray-800 p-3 shadow-[4px_0_24px_rgba(0,0,0,0.02)] relative z-50">
       {/* Header */}
-      <div className="flex items-center gap-2 px-2 py-3 mb-4">
+      <Link href="/" className="flex items-center gap-2 px-2 py-3 mb-4 transition-transform hover:scale-[1.02] active:scale-[0.98]">
         <div className="flex items-center justify-center size-8 bg-purple-600 rounded-lg text-white shadow-sm shadow-purple-200">
           <svg viewBox="0 0 24 24" fill="none" className="size-5" stroke="currentColor" strokeWidth="2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </div>
         <span className="font-semibold text-lg text-gray-900 tracking-tight">AI Chat</span>
-      </div>
+      </Link>
 
       {/* New Chat Button */}
-      <button className="flex items-center justify-between w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] mb-6 shadow-md shadow-purple-500/20 group">
+      <Link href="/" className="flex items-center justify-between w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] mb-6 shadow-md shadow-purple-500/20 group">
         <div className="flex items-center gap-2">
           <Plus className="size-4 group-hover:rotate-90 transition-transform duration-300" />
           <span>New Chat</span>
@@ -26,22 +36,28 @@ export function Sidebar() {
           <span>⌘</span>
           <span>N</span>
         </div>
-      </button>
+      </Link>
 
       {/* Navigation */}
       <nav className="flex flex-col gap-1 mb-6">
-        <button className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg transition-all duration-200 active:scale-[0.98]">
-          <MessageSquare className="size-4 opacity-70" />
-          <span className="font-medium">Chats</span>
-        </button>
-        <button className="flex items-center gap-3 px-3 py-2 text-sm text-yellow-900 bg-yellow-100 hover:bg-yellow-200/80 font-medium rounded-lg transition-all duration-200 active:scale-[0.98]">
-          <Settings2 className="size-4 text-yellow-600" />
-          <span>Customize</span>
-        </button>
-        <button className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg transition-all duration-200 active:scale-[0.98]">
-          <Search className="size-4 opacity-70" />
-          <span className="font-medium">Search</span>
-        </button>
+        {navItems.map((item) => {
+          const isActive = pathname === item.href
+          const Icon = item.icon
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200 active:scale-[0.98] ${
+                isActive
+                  ? 'text-yellow-900 bg-yellow-100 hover:bg-yellow-200/80 font-medium'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
+              }`}
+            >
+              <Icon className={`size-4 ${isActive ? 'text-yellow-600' : 'opacity-70'}`} />
+              <span className={isActive ? '' : 'font-medium'}>{item.name}</span>
+            </Link>
+          )
+        })}
       </nav>
 
       {/* Search Bar */}
@@ -58,24 +74,26 @@ export function Sidebar() {
       <div className="flex-1 overflow-y-auto pr-1 -mr-1 custom-scrollbar">
         <div className="text-[11px] font-bold text-gray-400 mb-3 px-2 tracking-widest uppercase">Recent</div>
         <div className="flex flex-col gap-0.5">
-          <button className="text-left text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 px-3 py-2 rounded-lg truncate transition-all duration-200 active:scale-[0.98] font-medium">
+          <Link href="/chats/1" className="text-left text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 px-3 py-2 rounded-lg truncate transition-all duration-200 active:scale-[0.98] font-medium block">
             How does AI work?
-          </button>
-          <button className="text-left text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 px-3 py-2 rounded-lg truncate transition-all duration-200 active:scale-[0.98] font-medium">
+          </Link>
+          <Link href="/chats/2" className="text-left text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 px-3 py-2 rounded-lg truncate transition-all duration-200 active:scale-[0.98] font-medium block">
             Python sorting algorithms
-          </button>
-          <button className="text-left text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 px-3 py-2 rounded-lg truncate transition-all duration-200 active:scale-[0.98] font-medium">
+          </Link>
+          <Link href="/chats/3" className="text-left text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 px-3 py-2 rounded-lg truncate transition-all duration-200 active:scale-[0.98] font-medium block">
             Creative story about a programmer
-          </button>
+          </Link>
         </div>
       </div>
 
       {/* Footer */}
       <div className="mt-auto pt-4 border-t border-black/5 flex flex-col gap-1">
-        <button className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-white/80 rounded-lg transition-all duration-200 active:scale-[0.98] font-medium">
-          <Settings className="size-4 opacity-70" />
+        <Link href="/settings" className={`flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-all duration-200 active:scale-[0.98] ${
+          pathname === '/settings' ? 'text-yellow-900 bg-yellow-100 font-medium' : 'text-gray-600 hover:text-gray-900 hover:bg-white/80 font-medium'
+        }`}>
+          <Settings className={`size-4 ${pathname === '/settings' ? 'text-yellow-600' : 'opacity-70'}`} />
           <span>Settings</span>
-        </button>
+        </Link>
         <button className="flex items-center justify-between px-3 py-2 text-sm text-gray-800 hover:bg-white/80 rounded-lg transition-all duration-200 active:scale-[0.98] group">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center size-6 bg-yellow-200 text-yellow-800 rounded-full shadow-sm">
