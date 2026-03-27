@@ -15,6 +15,7 @@ import {
   Bolt,
   SendHorizontal
 } from 'lucide-react'
+import { GlowCard } from './spotlight-card'
 
 // --- TYPES ---
 interface Model {
@@ -27,11 +28,11 @@ interface Model {
 
 // --- CONSTANTS ---
 const AVAILABLE_MODELS: Model[] = [
-  { id: 'sonnet-4.5', name: 'Sonnet 4.5', description: 'Fast & intelligent', icon: <Zap className="size-4 text-blue-400" />, badge: 'Default' },
-  { id: 'opus-4.5', name: 'Opus 4.5', description: 'Most capable', icon: <Sparkles className="size-4 text-purple-400" />, badge: 'Pro' },
-  { id: 'haiku-4.5', name: 'Haiku 4.5', description: 'Lightning fast', icon: <Brain className="size-4 text-emerald-400" /> },
-  { id: 'gpt-4o', name: 'GPT-4o', description: 'OpenAI flagship', icon: <Sparkles className="size-4 text-green-400" /> },
-  { id: 'gemini-2.0', name: 'Gemini 2.0', description: 'Google AI', icon: <Brain className="size-4 text-cyan-400" /> }
+  { id: 'sonnet-4.5', name: 'Sonnet 4.5', description: 'Fast & intelligent', icon: <Zap className="size-4 text-purple-600" />, badge: 'Default' },
+  { id: 'opus-4.5', name: 'Opus 4.5', description: 'Most capable', icon: <Sparkles className="size-4 text-yellow-600" />, badge: 'Pro' },
+  { id: 'haiku-4.5', name: 'Haiku 4.5', description: 'Lightning fast', icon: <Brain className="size-4 text-green-600" /> },
+  { id: 'gpt-4o', name: 'GPT-4o', description: 'OpenAI flagship', icon: <Sparkles className="size-4 text-blue-600" /> },
+  { id: 'gemini-2.0', name: 'Gemini 2.0', description: 'Google AI', icon: <Brain className="size-4 text-cyan-600" /> }
 ]
 
 const ATTACHMENT_OPTIONS = [
@@ -83,7 +84,7 @@ function ModelSelector({ selectedModelId = 'sonnet-4.5', onModelChange }: {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 text-[#8a8a8f] hover:text-white hover:bg-white/5 active:scale-95"
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all duration-200 text-gray-500 hover:text-gray-900 hover:bg-black/5 active:scale-95"
       >
         {selectedModel.icon}
         <span>{selectedModel.name}</span>
@@ -92,10 +93,11 @@ function ModelSelector({ selectedModelId = 'sonnet-4.5', onModelChange }: {
 
       {isOpen && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute bottom-full left-0 mb-2 z-50 min-w-[220px] bg-[#1a1a1e]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl shadow-black/50 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+          <div className="fixed inset-0 z-[100]" onClick={() => setIsOpen(false)} />
+          {/* Changed bottom-full to top-full to drop DOWN instead of UP, and fixed z-index */}
+          <div className="absolute top-full left-0 mt-2 z-[110] min-w-[220px] bg-white/95 backdrop-blur-xl border border-gray-200 rounded-xl shadow-2xl shadow-black/10 animate-in fade-in slide-in-from-top-2 duration-200">
             <div className="p-1.5">
-              <div className="px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#5a5a5f]">
+              <div className="px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-gray-400">
                 Select Model
               </div>
               {AVAILABLE_MODELS.map((model) => (
@@ -103,7 +105,7 @@ function ModelSelector({ selectedModelId = 'sonnet-4.5', onModelChange }: {
                   key={model.id}
                   onClick={() => handleSelect(model)}
                   className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-lg text-left transition-all duration-150 ${
-                    selectedModel.id === model.id ? 'bg-white/10 text-white' : 'text-[#a0a0a5] hover:bg-white/5 hover:text-white'
+                    selectedModel.id === model.id ? 'bg-purple-50 text-purple-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }`}
                 >
                   <div className="flex-shrink-0">{model.icon}</div>
@@ -112,15 +114,15 @@ function ModelSelector({ selectedModelId = 'sonnet-4.5', onModelChange }: {
                       <span className="text-sm font-medium">{model.name}</span>
                       {model.badge && (
                         <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
-                          model.badge === 'Pro' ? 'bg-purple-500/20 text-purple-300' : 'bg-blue-500/20 text-blue-300'
+                          model.badge === 'Pro' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600'
                         }`}>
                           {model.badge}
                         </span>
                       )}
                     </div>
-                    <span className="text-[11px] text-[#6a6a6f]">{model.description}</span>
+                    <span className="text-[11px] text-gray-500">{model.description}</span>
                   </div>
-                  {selectedModel.id === model.id && <Check className="size-4 text-blue-400 flex-shrink-0" />}
+                  {selectedModel.id === model.id && <Check className="size-4 text-purple-600 flex-shrink-0" />}
                 </button>
               ))}
             </div>
@@ -162,97 +164,92 @@ function ChatInput({ onSend, placeholder = "What do you want to build?" }: {
   }
 
   return (
-    <div className="relative w-full max-w-[680px] mx-auto">
-      <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-white/[0.08] to-transparent pointer-events-none" />
-      <div className="relative rounded-2xl bg-[#1e1e22] ring-1 ring-white/[0.08] shadow-[0_0_0_1px_rgba(255,255,255,0.05),0_2px_20px_rgba(0,0,0,0.4)]">
+    <div className="relative w-full max-w-[720px] mx-auto group z-50 pointer-events-auto">
+      <div className="absolute -inset-1 rounded-[1.5rem] bg-gradient-to-r from-purple-100 via-white to-yellow-100 opacity-20 group-hover:opacity-40 blur-lg transition-opacity duration-500 pointer-events-none" />
 
-        {/* Text Input */}
-        <div className="relative">
-          <textarea
-            ref={textareaRef}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={placeholder}
-            className="w-full resize-none bg-transparent text-[15px] text-white placeholder-[#5a5a5f] px-5 pt-5 pb-3 focus:outline-none min-h-[80px] max-h-[200px]"
-            style={{ height: '80px' }}
-          />
-        </div>
+      {/* Removed overflow-hidden so the dropdown can escape the container bounds */}
+      <GlowCard customSize glowColor="purple" className="w-full rounded-[1.5rem] p-0 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300">
+        {/* We need the rounded corners to apply here instead, to prevent clipping */}
+        <div className="relative bg-white/90 backdrop-blur-2xl h-full w-full rounded-[1.5rem]">
 
-        {/* Toolbar */}
-        <div className="flex items-center justify-between px-3 pb-3 pt-1">
-          {/* Left Controls */}
-          <div className="flex items-center gap-1">
-            <div className="relative">
-              <button
-                onClick={() => setShowAttachMenu(!showAttachMenu)}
-                className="flex items-center justify-center size-8 rounded-full bg-white/[0.08] hover:bg-white/[0.12] text-[#8a8a8f] hover:text-white transition-all duration-200 active:scale-95"
-              >
-                <Plus className={`size-4 transition-transform duration-200 ${showAttachMenu ? 'rotate-45' : ''}`} />
-              </button>
+          {/* Text Input */}
+          <div className="relative">
+            <textarea
+              ref={textareaRef}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={placeholder}
+              className="w-full resize-none bg-transparent text-[16px] leading-relaxed text-gray-900 placeholder-gray-400 px-6 pt-6 pb-4 focus:outline-none min-h-[90px] max-h-[250px] font-medium"
+              style={{ height: '90px' }}
+            />
+          </div>
 
-              {showAttachMenu && (
-                <>
-                  <div className="fixed inset-0 z-40" onClick={() => setShowAttachMenu(false)} />
-                  <div className="absolute bottom-full left-0 mb-2 z-50 bg-[#1a1a1e]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl shadow-black/50 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
-                    <div className="p-1.5 min-w-[180px]">
-                      {ATTACHMENT_OPTIONS.map((item, i) => (
-                        <button key={i} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[#a0a0a5] hover:bg-white/5 hover:text-white transition-all duration-150">
-                          {item.icon}
-                          <span className="text-sm">{item.label}</span>
-                        </button>
-                      ))}
+          {/* Toolbar */}
+          <div className="flex items-center justify-between px-4 pb-4 pt-2">
+            {/* Left Controls */}
+            <div className="flex items-center gap-1.5">
+              <div className="relative">
+                <button
+                  onClick={() => setShowAttachMenu(!showAttachMenu)}
+                  className="flex items-center justify-center size-9 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-all duration-200 active:scale-95 border border-gray-100"
+                >
+                  <Plus className={`size-4 transition-transform duration-300 ${showAttachMenu ? 'rotate-45' : ''}`} />
+                </button>
+
+                {showAttachMenu && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setShowAttachMenu(false)} />
+                    <div className="absolute bottom-full left-0 mb-3 z-50 bg-white/95 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl shadow-black/5 overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+                      <div className="p-1.5 min-w-[180px]">
+                        {ATTACHMENT_OPTIONS.map((item, i) => (
+                          <button key={i} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all duration-150 font-medium">
+                            {item.icon}
+                            <span className="text-sm">{item.label}</span>
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
+              </div>
+              <ModelSelector />
             </div>
-            <ModelSelector />
-          </div>
 
-          <div className="flex-1" />
+            <div className="flex-1" />
 
-          {/* Right Controls */}
-          <div className="flex items-center gap-2">
-            <button className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-medium text-[#6a6a6f] hover:text-white hover:bg-white/5 transition-all duration-200">
-              <Lightbulb className="size-4" />
-              <span className="hidden sm:inline">Plan</span>
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={!message.trim()}
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-[#1488fc] hover:bg-[#1a94ff] text-white transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 shadow-[0_0_20px_rgba(20,136,252,0.3)]"
-            >
-              <span className="hidden sm:inline">Build now</span>
-              <SendHorizontal className="size-4" />
-            </button>
+            {/* Right Controls */}
+            <div className="flex items-center gap-2">
+              <button className="flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200">
+                <Lightbulb className="size-4" />
+                <span className="hidden sm:inline">Plan</span>
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={!message.trim()}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold bg-gray-900 hover:bg-black text-white transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 shadow-md shadow-gray-900/20"
+              >
+                <span className="hidden sm:inline">Send</span>
+                <SendHorizontal className="size-4" />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </GlowCard>
     </div>
   )
 }
 
 function RayBackground() {
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none">
-      <div className="absolute inset-0 bg-[#0f0f0f]" />
-      <div
-        className="absolute left-1/2 -translate-x-1/2 w-[4000px] h-[1800px] sm:w-[6000px]"
-        style={{
-          background: `radial-gradient(circle at center 800px, rgba(20, 136, 252, 0.8) 0%, rgba(20, 136, 252, 0.35) 14%, rgba(20, 136, 252, 0.18) 18%, rgba(20, 136, 252, 0.08) 22%, rgba(17, 17, 20, 0.2) 25%)`
-        }}
-      />
-      <div
-        className="absolute top-[175px] left-1/2 w-[1600px] h-[1600px] sm:top-1/2 sm:w-[3043px] sm:h-[2865px]"
-        style={{ transform: 'translate(-50%) rotate(180deg)' }}
-      >
-        <div className="absolute w-full h-full rounded-full -mt-[13px]" style={{ background: 'radial-gradient(43.89% 25.74% at 50.02% 97.24%, #111114 0%, #0f0f0f 100%)', border: '16px solid white', transform: 'rotate(180deg)', zIndex: 5 }} />
-        <div className="absolute w-full h-full rounded-full bg-[#0f0f0f] -mt-[11px]" style={{ border: '23px solid #b7d7f6', transform: 'rotate(180deg)', zIndex: 4 }} />
-        <div className="absolute w-full h-full rounded-full bg-[#0f0f0f] -mt-[8px]" style={{ border: '23px solid #8fc1f2', transform: 'rotate(180deg)', zIndex: 3 }} />
-        <div className="absolute w-full h-full rounded-full bg-[#0f0f0f] -mt-[4px]" style={{ border: '23px solid #64acf6', transform: 'rotate(180deg)', zIndex: 2 }} />
-        <div className="absolute w-full h-full rounded-full bg-[#0f0f0f]" style={{ border: '20px solid #1172e2', boxShadow: '0 -15px 24.8px rgba(17, 114, 226, 0.6)', transform: 'rotate(180deg)', zIndex: 1 }} />
-      </div>
+    <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none select-none bg-[#Fdfbf7]">
+      {/* Decorative Blur Orbs */}
+      <div className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-purple-200/40 rounded-full blur-[100px] opacity-60 mix-blend-multiply animate-pulse" style={{ animationDuration: '8s' }} />
+      <div className="absolute top-[40%] right-[10%] w-[400px] h-[400px] bg-yellow-200/40 rounded-full blur-[80px] opacity-60 mix-blend-multiply animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
+      <div className="absolute -bottom-[10%] left-[40%] w-[600px] h-[600px] bg-blue-100/40 rounded-full blur-[120px] opacity-60 mix-blend-multiply animate-pulse" style={{ animationDuration: '12s', animationDelay: '4s' }} />
+
+      {/* Subtle Grid Pattern */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMCwwLDAsMC4wNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)]" />
     </div>
   )
 }
@@ -260,25 +257,20 @@ function RayBackground() {
 function AnnouncementBadge({ text, href = "#" }: { text: string; href?: string }) {
   const content = (
     <>
-      <span className="absolute top-0 left-0 right-0 h-1/2 pointer-events-none opacity-70 mix-blend-overlay" style={{ background: 'radial-gradient(ellipse at center top, rgba(255, 255, 255, 0.15) 0%, transparent 70%)' }} />
-      <span className="absolute -top-px left-1/2 -translate-x-1/2 h-[2px] w-[100px] opacity-60" style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(37, 119, 255, 0.8) 20%, rgba(126, 93, 225, 0.8) 50%, rgba(59, 130, 246, 0.8) 80%, transparent 100%)', filter: 'blur(0.5px)' }} />
-      <Bolt className="size-4 relative z-10 text-white" />
-      <span className="relative z-10 text-white font-medium">{text}</span>
+      <span className="absolute inset-0 bg-white/50 backdrop-blur-md rounded-full pointer-events-none" />
+      <span className="absolute inset-0 rounded-full ring-1 ring-inset ring-purple-100 pointer-events-none" />
+      <Sparkles className="size-4 relative z-10 text-purple-500" />
+      <span className="relative z-10 text-gray-800 font-semibold tracking-wide text-xs uppercase">{text}</span>
     </>
   )
 
-  const className = "relative inline-flex items-center gap-2 px-5 py-2 min-h-[40px] rounded-full text-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-  const style = {
-    background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
-    backdropFilter: 'blur(20px) saturate(140%)',
-    boxShadow: 'inset 0 1px rgba(255,255,255,0.2), inset 0 -1px rgba(0,0,0,0.1), 0 8px 32px -8px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.08)'
-  }
+  const className = "relative inline-flex items-center gap-2 px-4 py-1.5 min-h-[32px] rounded-full text-sm overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-sm hover:shadow-md hover:shadow-purple-500/10"
 
   if (href !== '#') {
-    return <a href={href} target="_blank" rel="noopener noreferrer" className={className} style={style}>{content}</a>
+    return <a href={href} target="_blank" rel="noopener noreferrer" className={className}>{content}</a>
   }
 
-  return <button className={className} style={style}>{content}</button>
+  return <button className={className}>{content}</button>
 }
 
 function ImportButtons({ onImport }: { onImport?: (source: string) => void }) {
@@ -289,13 +281,13 @@ function ImportButtons({ onImport }: { onImport?: (source: string) => void }) {
 
   return (
     <div className="flex items-center gap-4 justify-center">
-      <span className="text-sm text-[#6a6a6f]">or import from</span>
+      <span className="text-sm text-gray-500">or import from</span>
       <div className="flex gap-2">
         {IMPORT_OPTIONS.map((option) => (
           <button
             key={option.id}
             onClick={() => onImport?.(option.id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-white/10 bg-[#0f0f0f] hover:bg-[#1a1a1e] text-[#8a8a8f] hover:text-white transition-all duration-200 active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 hover:text-gray-900 transition-all duration-200 active:scale-95 shadow-sm"
           >
             {option.icon}
             <span>{option.name}</span>
@@ -320,40 +312,43 @@ interface BoltChatProps {
 export function BoltStyleChat({
   title = "What will you",
   subtitle = "Create stunning apps & websites by chatting with AI.",
-  announcementText = "Introducing Bolt V2",
+  announcementText = "your own ai machine",
   announcementHref = "#",
   placeholder = "What do you want to build?",
   onSend,
   onImport
 }: BoltChatProps) {
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden bg-[#0f0f0f]">
+    <div className="relative flex flex-col items-center justify-center h-full w-full overflow-hidden bg-[#Fdfbf7] z-0">
       <RayBackground />
 
-      <div className="absolute top-[70px]">
+      {/* Adding high z-index and relative positioning to keep interactive elements above the background */}
+      <div className="absolute top-[70px] z-50">
         <AnnouncementBadge text={announcementText} href={announcementHref} />
       </div>
 
-      <div className="absolute top-[66%] left-1/2 sm:top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-full h-full overflow-hidden px-4">
+      <div className="absolute top-[55%] left-1/2 sm:top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-full h-full px-4 pointer-events-none">
 
         {/* Title Section */}
-        <div className="text-center mb-6">
-          <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight mb-1">
+        <div className="text-center mb-6 z-20 pointer-events-auto">
+          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight mb-2">
             {title}{' '}
-            <span className="bg-gradient-to-b from-[#4da5fc] via-[#4da5fc] to-white bg-clip-text text-transparent italic">
+            <span className="bg-gradient-to-r from-purple-600 to-yellow-500 bg-clip-text text-transparent italic pr-2">
               build
             </span>
-            {' '}today?
+            today?
           </h1>
-          <p className="text-base font-semibold sm:text-lg text-[#8a8a8f]">{subtitle}</p>
+          <p className="text-base font-medium sm:text-lg text-gray-500">{subtitle}</p>
         </div>
 
         {/* Interactive Elements */}
-        <div className="w-full max-w-[700px] mb-6 sm:mb-8 mt-2">
+        <div className="w-full max-w-[720px] mb-6 sm:mb-8 mt-2 z-30 pointer-events-auto">
           <ChatInput placeholder={placeholder} onSend={onSend} />
         </div>
 
-        <ImportButtons onImport={onImport} />
+        <div className="z-20 pointer-events-auto">
+          <ImportButtons onImport={onImport} />
+        </div>
       </div>
     </div>
   )
