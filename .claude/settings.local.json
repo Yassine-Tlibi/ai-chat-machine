@@ -4,7 +4,8 @@
       "Bash(python:*)",
       "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --yes)",
       "Bash(mkdir -p /tmp/claude-backup)",
-      "Bash(mv CLAUDE.md legacy-chat.html server.py test.txt test_keys.py /tmp/claude-backup/)"
+      "Bash(mv CLAUDE.md legacy-chat.html server.py test.txt test_keys.py /tmp/claude-backup/)",
+      "Bash(npx shadcn@latest init -d)"
     ]
   }
 }
