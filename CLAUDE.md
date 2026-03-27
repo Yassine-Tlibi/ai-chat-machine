@@ -40,3 +40,14 @@ Everything lives in one `claude.html` file — no build tools, no dependencies b
 - Supabase JS SDK v2
 - highlight.js 11.9.0 (Atom One Dark theme)
 - Google Fonts: DM Sans, JetBrains Mono
+
+## Next.js UI Components
+
+The project is currently transitioning to or also includes a React/Next.js setup configured with shadcn UI, Tailwind CSS, and TypeScript.
+
+- **Default path for components:** `src/components/ui`
+- **Why this folder is important:** Adhering to the `components/ui` structure allows the shadcn CLI to automatically place newly installed components in a standardized, isolated location. This keeps generic, reusable UI building blocks separate from application-specific features or layouts, maintaining a clean and scalable codebase.
+
+### Recently Added
+- Integrated `BoltStyleChat` into `src/components/ui/bolt-style-chat.tsx`.
+- Demo route added at `src/app/demo/page.tsx` (`<BoltStyleChat />`).

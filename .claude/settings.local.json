@@ -5,7 +5,10 @@
       "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --yes)",
       "Bash(mkdir -p /tmp/claude-backup)",
       "Bash(mv CLAUDE.md legacy-chat.html server.py test.txt test_keys.py /tmp/claude-backup/)",
-      "Bash(npx shadcn@latest init -d)"
+      "Bash(npx shadcn@latest init -d)",
+      "Bash(npm install lucide-react)",
+      "Bash(npx next build)",
+      "Bash(node -e \"const l = require\\(''lucide-react''\\); const keys = Object.keys\\(l\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''git''\\)\\); console.log\\(keys.join\\('', ''\\)\\)\")"
     ]
   }
 }
